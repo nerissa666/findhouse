@@ -11,7 +11,7 @@ const HeroLink = ({ link }: { link: { href: string; label: string } }) => {
   return (
     <Link
       href={link.href}
-      className="inline-block relative overflow-hidden group py-1 uppercase font-bold tracking-tight w-[80px]"
+      className="inline-block relative overflow-hidden group py-1 uppercase font-bold tracking-tight w-1/5"
     >
       <span
         className={`relative z-10 transition-colors duration-200 group-hover:text-white dark:group-hover:text-black ${
@@ -27,7 +27,7 @@ const HeroLink = ({ link }: { link: { href: string; label: string } }) => {
 export const Menu = ({ props: { list, style } }: { props: React.ReactNode }) => {
   return (
     <div className={` 
-    ${style}
+    ${style} w-[100%]
     `}>
       {
     //   [
