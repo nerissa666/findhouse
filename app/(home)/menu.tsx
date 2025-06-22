@@ -1,8 +1,9 @@
 "use client";
 import Link from "next/link";
 import { useSelectedPage } from "./use-selected-page";
+import { ListItem } from "./types";
 
-const HeroLink = ({ link }: { link: { href: string; label: string } }) => {
+const HeroLink = ({ link }: { link: ListItem }) => {
   const selectedPage = useSelectedPage();
   //   if (selectedPage === link.label) {
   //     return null;
@@ -29,7 +30,7 @@ const HeroLink = ({ link }: { link: { href: string; label: string } }) => {
 export const Menu = ({
   props: { list, style },
 }: {
-  props: React.ReactNode;
+  props: { list: ListItem[]; style: string; icon: React.ReactNode };
 }) => {
   return (
     <div
@@ -44,14 +45,9 @@ export const Menu = ({
         //     { href: "/news", label: "资讯" },
         //     { href: "/my", label: "我的" },
         //   ]
-        list.map(
-          (
-            link: { href: string; label: string; icon: React.ReactNode },
-            index: number
-          ) => (
-            <HeroLink key={index} link={link} />
-          )
-        )
+        list.map((link, index) => (
+          <HeroLink key={index} link={link} />
+        ))
       }
     </div>
   );
