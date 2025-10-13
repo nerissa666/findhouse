@@ -1,0 +1,46 @@
+.mySearchBar {
+  :global(.adm-search-bar-active .adm-search-bar-input-box) {
+    border: none;
+  }
+  :global(.adm-search-bar .adm-search-bar-input-box .adm-search-bar-input) {
+    padding: 0;
+  }
+
+  // 覆盖 antd-mobile SearchBar 的 CSS 变量
+  :global(.adm-search-bar) {
+    --background: #fff;
+  }
+  :global(.adm-search-bar-input-box-icon) {
+    border-left: 1px solid var(--color-gap-gray);
+    padding: 0 5px 0 10px;
+  }
+
+  :global(.ant-select) {
+    width: 100%;
+  }
+  :global(.ant-select-arrow) {
+    display: none;
+  }
+  :global(.ant-select-selector) {
+    border: none !important;
+    box-shadow: none !important;
+  }
+}
+
+.activeMySearchBar {
+  border-color: var(--color-theme-green);
+}
+
+.adaptiveIcon {
+  // 确保图标有正确的尺寸
+  display: inline-block;
+  width: 1.5rem;
+  height: 100%;
+  line-height: 1.5rem;
+  text-align: center;
+
+  // 使用 mix-blend-mode 实现颜色取反，确保在任何背景下都突出显示
+  mix-blend-mode: difference;
+  color: white;
+  position: relative;
+}

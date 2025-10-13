@@ -1,7 +1,7 @@
 export const Footer = () => {
   return (
     <footer
-      className={`w-full py-6 border-t border-white/10 relative z-10 transition-all duration-700  "opacity-100" `}
+      className={`w-full py-1 border-t border-white/10 relative z-10 transition-all duration-700  "opacity-100" `}
       style={{ transitionDelay: "800ms" }}
     >
       <div className="container mx-auto px-4">

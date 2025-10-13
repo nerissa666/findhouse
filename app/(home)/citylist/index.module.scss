@@ -1,0 +1,11 @@
+.citylist {
+  :global(.ant-input-outlined:focus-within) {
+    border-color: var(--color-theme-green) !important;
+  }
+  :global(.ant-input-outlined:hover) {
+    border-color: var(--color-gap-gray);
+  }
+  :global(.ant-input-outlined) {
+    border-color: transparent;
+  }
+}

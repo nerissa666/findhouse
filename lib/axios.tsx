@@ -1,4 +1,5 @@
 // findhouse/axios.tsx
+const controller = new AbortController();
 import axios, { AxiosResponse } from "axios";
 // 扩展 AxiosResponse 类型
 interface CustomAxiosResponse<T = any> extends AxiosResponse<T> {
@@ -10,6 +11,10 @@ const axiosInstance = axios.create({
   timeout: 10000, // 请求超时时间（毫秒）
 });
 
+
+// 用signal来取消请求
+// const signal = AbortSignal.timeout(10000);
+
 // 请求拦截器
 axiosInstance.interceptors.request.use(
   (config) => {
@@ -19,6 +24,8 @@ axiosInstance.interceptors.request.use(
   },
   (error) => {
     // 对请求错误做些什么
+    console.log("errorXxx", error);
+    controller.abort();
     return Promise.reject(error);
   }
 );
