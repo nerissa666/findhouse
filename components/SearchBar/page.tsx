@@ -54,6 +54,13 @@ export default ({
       return;
     }
 
+    // 检查 cityValue 是否有效
+    if (!cityValue) {
+      console.warn("City value is empty, skipping API call");
+      setOptions([]);
+      return;
+    }
+
     axios
       .get("/area/community", {
         params: {
@@ -122,7 +129,7 @@ export default ({
               }}
             >
               <span className="text-sm">{cityLabel}</span>
-              <i className="iconfont icon-arrow text-[#7f7f80] !text-xs"></i>
+              <i className="iconfont icon-arrow text-[#7f7f80] !text-xs" />
             </div>
             <div className="flex-1">
               <Select

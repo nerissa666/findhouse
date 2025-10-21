@@ -11,7 +11,7 @@ export default () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await axios.get("/user/houses");
+      const res = await axios.get("/user/favorites");
       setData(res as unknown as House[]);
     };
     fetchData();
@@ -46,7 +46,7 @@ export default () => {
           map: false,
           select: false,
           share: false,
-          title: "我的房源",
+          title: "我的收藏",
         }}
       />
       <Suspense fallback={errorBlock()}>

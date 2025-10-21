@@ -11,12 +11,14 @@ import { getTagColor } from "@/lib/utils";
 import HouseList from "@/components/HouseList";
 import { House, HouseInfo } from "@/app/types";
 import SearchBar from "@/components/SearchBar";
+import Image from "next/image";
+
 export default () => {
   const searchParams = useSearchParams();
   const code = searchParams.get("code") ?? "";
   const [data, setData] = useState<HouseInfo>();
   const [recommendHouses, setRecommendHouses] = useState<House[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [isCollect, setIsCollect] = useState(false);
 
   useEffect(() => {
     //房源详情
@@ -48,8 +50,62 @@ export default () => {
         />
       </Swiper.Item>
     )) ?? [];
+  useEffect(() => {
+    // 获取收藏状态
+    const fetchCollectStatus = async () => {
+      try {
+        const res = await axios.get(`/user/favorites/${code}`);
+        setIsCollect((res as unknown as { isCollect: boolean }).isCollect);
+      } catch (error) {
+        console.log("获取收藏状态失败:", error);
+        setIsCollect(false);
+      }
+    };
+    fetchCollectStatus();
+  }, [code]);
+  const DetailMenu = () => {
+    return (
+      <div
+        className="fixed bottom-[-8px] left-0 right-0 z-50 flex flex-row text-center gap-15 px-8 h-15 !text-lg !text-[#999] "
+        style={{ boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.1)" }}
+      >
+        <div
+          className="flex items-center gap-2 cursor-pointer"
+          onClick={async () => {
+            try {
+              if (isCollect) {
+                await axios.delete(`/user/favorites/${code}`);
+                setIsCollect(false);
+                Toast.show("取消收藏成功");
+              } else {
+                await axios.post(`/user/favorites/${code}`);
+                setIsCollect(true);
+                Toast.show("收藏成功");
+              }
+            } catch (error) {
+              console.error("收藏操作失败:", error);
+              Toast.show("操作失败，请重试");
+            }
+          }}
+        >
+          <Image
+            src={BASE_URL + (isCollect ? "/img/star.png" : "/img/unstar.png")}
+            alt={isCollect ? "已收藏" : "未收藏"}
+            width={20}
+            height={20}
+            key={`collect-${isCollect}-${code}`}
+            priority
+          />
+          收藏
+        </div>
+        <div className="flex items-center gap-2"> 在线咨询</div>
+        <div className="flex items-center gap-2">电话预约</div>
+      </div>
+    );
+  };
+
   return (
-    <>
+    <div className="relative">
       <div className="relative">
         <SearchBar
           from="/detail"
@@ -155,11 +211,11 @@ export default () => {
           </div>
           <div className="">
             <div className="flex justify-between mb-[10px] items-center">
-              <img
+              <Image
                 src={BASE_URL + "/img/avatar.png"}
                 alt="头像"
-                width="52px"
-                height="52px"
+                width={52}
+                height={52}
                 className="mr-[10px] mt-[10px]"
               />
               <div className="flex-1">
@@ -191,9 +247,11 @@ export default () => {
           <div className="py-[15px] text-[15px] font-bold mb-[10px] border-b border-[#cecece]">
             猜你喜欢
           </div>
-          <HouseList data={recommendHouses} loading={loading} />
+          <HouseList data={recommendHouses} total={1} />
         </div>
       </div>
-    </>
+
+      <DetailMenu />
+    </div>
   );
 };

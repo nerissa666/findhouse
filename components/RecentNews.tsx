@@ -59,7 +59,7 @@ const RecentNews = ({ title = true }: { title?: boolean }) => {
   if (loading) {
     return (
       <div className="w-full">
-        <h3 className="font-medium">最新资讯</h3>
+        <h3 className="font-medium text-base">最新资讯</h3>
         <div className="w-full h-32 bg-gray-200 animate-pulse rounded-lg flex items-center justify-center mt-2">
           加载中...
         </div>
@@ -73,7 +73,7 @@ const RecentNews = ({ title = true }: { title?: boolean }) => {
 
   return (
     <div className="w-full">
-      {title && <h3 className="font-medium">最新资讯</h3>}
+      {title && <h3 className="font-medium text-base">最新资讯</h3>}
       <List
         dataSource={data}
         className="w-full"

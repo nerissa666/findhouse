@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "@ant-design/v5-patch-for-react-19";
+import "@/lib/react19-patch";
+import "@/lib/antd-mobile-react19-patch";
 import "@/public/fonts/iconfont.css";
+import "@/public/fonts/bed/iconfont.css";
 import "./globals.css";
+import "antd-mobile/es/global";
 
 import Providers from "@/components/Provider";
 const geistSans = Geist({

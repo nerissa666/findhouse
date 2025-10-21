@@ -33,6 +33,12 @@ export default () => {
   }, [data.length]);
 
   const fetchData = async (start = 1): Promise<HousesBody> => {
+    // 检查必需参数
+    if (!city.value) {
+      console.warn("City value is empty, cannot fetch houses");
+      throw new Error("City is required");
+    }
+
     const res = await axios.get<HousesBody>("/houses", {
       params: {
         cityId: city.value,

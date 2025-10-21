@@ -1,5 +1,7 @@
 @import "tailwindcss";
 @import "antd/dist/reset.css";
+@import "antd-mobile/es/global/global.css";
+@import "antd-mobile/es/global/theme-default.css";
 
 @tailwind base;
 @tailwind components;
