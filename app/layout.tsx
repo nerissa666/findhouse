@@ -1,7 +1,14 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
 import "@ant-design/v5-patch-for-react-19";
+import "@/lib/react19-patch";
+import "@/lib/antd-mobile-react19-patch";
+import "@/public/fonts/iconfont.css";
+import "@/public/fonts/bed/iconfont.css";
+import "./globals.css";
+import "antd-mobile/es/global";
+
+import Providers from "@/components/Provider";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -24,10 +31,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="light" style={{ colorScheme: "light" }}>
+      <head>
+        <script
+          type="text/javascript"
+          src={`//api.map.baidu.com/api?type=webgl&v=1.0&ak=mzBY3pLQTnguP3a9yriGkb3sRPoidbNE`}
+          async
+          defer
+        ></script>
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased m-4  mb-15 `}
       >
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

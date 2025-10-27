@@ -1,0 +1,66 @@
+{
+  "status": 200,
+  "description": "请求成功",
+  "body": [
+    {
+      "city": "AREA|88cff55c-aaa4-e2e0",
+      "cityName": "北京",
+      "area": "AREA|69cc5f6d-4f29-a77c",
+      "areaName": "朝阳",
+      "street": "AREA|aaa638e8-8a5e-e9ce",
+      "streetName": "望京",
+      "community": "AREA|14786479-ddb5-1bf2",
+      "communityName": "北京香颂"
+    },
+    {
+      "city": "AREA|88cff55c-aaa4-e2e0",
+      "cityName": "北京",
+      "area": "AREA|c3ec1269-459e-491c",
+      "areaName": "通州",
+      "street": "AREA|64f93451-0846-db9c",
+      "streetName": "九棵树(家乐福)",
+      "community": "AREA|d1728d11-f52a-e0b7",
+      "communityName": "龙湖蔚澜香醍"
+    },
+    {
+      "city": "AREA|88cff55c-aaa4-e2e0",
+      "cityName": "北京",
+      "area": "AREA|0dd58113-90ab-4d85",
+      "areaName": "丰台",
+      "street": "AREA|a34b47ee-a817-16f5",
+      "streetName": "六里桥",
+      "community": "AREA|705872ff-c0e5-6618",
+      "communityName": "莲香园"
+    },
+    {
+      "city": "AREA|88cff55c-aaa4-e2e0",
+      "cityName": "北京",
+      "area": "AREA|f46287e7-3d9e-fbf6",
+      "areaName": "亦庄开发区",
+      "street": "AREA|55158331-4bb5-0604",
+      "streetName": "亦庄",
+      "community": "AREA|20ae0545-f573-f9a4",
+      "communityName": "郁金香舍"
+    },
+    {
+      "city": "AREA|88cff55c-aaa4-e2e0",
+      "cityName": "北京",
+      "area": "AREA|0dd58113-90ab-4d85",
+      "areaName": "丰台",
+      "street": "AREA|6a39beba-4316-d2e0",
+      "streetName": "成寿寺",
+      "community": "AREA|b0bbe128-3121-6a47",
+      "communityName": "中海城香克林"
+    },
+    {
+      "city": "AREA|88cff55c-aaa4-e2e0",
+      "cityName": "北京",
+      "area": "AREA|509dc430-5a85-1a1a",
+      "areaName": "顺义",
+      "street": "AREA|7e504d2e-58aa-a5e6",
+      "streetName": "马坡",
+      "community": "AREA|b45fef3c-3cad-8d88",
+      "communityName": "香悦四季"
+    }
+  ]
+}

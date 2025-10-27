@@ -1,0 +1,19 @@
+.rent {
+  :global(.adm-button) {
+    width: 50% !important;
+  }
+  :global(.adm-form-footer) {
+    position: fixed;
+    bottom: 40px;
+    left: 0;
+    right: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  :global(.ant-select-selector) {
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    font-size: var(--font-size);
+  }
+}

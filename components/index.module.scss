@@ -1,0 +1,32 @@
+.slickDots {
+  :global(.slick-dots) {
+    bottom: 5px;
+  }
+}
+.virtualizedList {
+  color: red;
+
+  // 使用 :global() 来修改第三方库的样式
+  :global(.adm-plain-anchor:first-of-type .adm-list-item-content) {
+    border-top: none !important;
+  }
+
+  // 尝试处理 List.Item 本身的边框
+  :global(.adm-list-item:first-of-type) {
+    border-top: none !important;
+  }
+
+  // 尝试处理 List 容器的边框
+  :global(.adm-list) {
+    border-top: none !important;
+  }
+
+  // 尝试处理可能的其他边框来源
+  :global(.adm-list-item:first-of-type::before) {
+    display: none !important;
+  }
+
+  :global(.adm-list-item:first-of-type::after) {
+    display: none !important;
+  }
+}

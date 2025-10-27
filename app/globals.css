@@ -1,17 +1,45 @@
 @import "tailwindcss";
+@import "antd/dist/reset.css";
+@import "antd-mobile/es/global/global.css";
+@import "antd-mobile/es/global/theme-default.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 /* :root {
   --background: #ffffff;
   --foreground: #171717;
 } */
 
-@theme inline {
+:root {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-primary: #2db7f5;
+  --color-secondary: #87d068;
+  --color-accent: #108ee9;
+  --color-gray-500: #6b7280;
+  --color-money-red: #fa5741;
+  --color-text-gray: #999;
+  --color-bg-base: #f6f5f6;
+  --color-primary-outline: #33be85;
+  --color-theme-green: #21b97a;
+  --color-gap-gray: #e5e5e5;
+  --color-icon-green: #ff5199;
+}
+
+@theme inline {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-size-1: 0.75rem; /* 12px */
+  --font-size-2: 1rem; /* 16px */
+  --font-size-3: 1.25rem; /* 20px */
+  --font-size-4: 1.5rem; /* 24px */
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -30,4 +58,15 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+}
+
+/* 隐藏滚动条类 */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
 }

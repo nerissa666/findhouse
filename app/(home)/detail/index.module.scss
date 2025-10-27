@@ -1,0 +1,47 @@
+.content {
+  height: 252px;
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 48px;
+  user-select: none;
+}
+
+.baseInfo > div {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 14px;
+  color: var(--color-money-red);
+  & > div {
+    $height: 26px;
+    height: $height;
+    line-height: $height;
+  }
+  & > div:first-child {
+    span {
+      font-size: 18px;
+      font-weight: bolder;
+    }
+  }
+  & > div:last-child {
+    color: var(--color-text-gray);
+  }
+}
+
+.wholeInfo {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  & > div {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    width: 100%;
+    > span:first-child {
+      color: var(--color-text-gray);
+    }
+  }
+}
