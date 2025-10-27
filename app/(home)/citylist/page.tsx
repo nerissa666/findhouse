@@ -45,9 +45,9 @@ export default () => {
         console.error(err);
       });
   };
-  const onDoubleClick = ({ label, value }: SelectOption) => {
+  const onDoubleClick = (selectedCity: SelectOption) => {
     // 更新 Redux 中的城市状态
-    dispatch(setCurrentCity({ label, value }));
+    dispatch(setCurrentCity(selectedCity));
     router.push(from);
   };
 
@@ -166,6 +166,7 @@ export default () => {
 
         // 创建最终的数据结构
         const temp: CityListGrouped = {
+          // 当前定位: [],
           当前城市: [currentCity as CityItem],
           热门城市: hotRes as unknown as CityItem[],
           ...tempHash,
@@ -225,51 +226,61 @@ export default () => {
               >
                 {key}
               </div>
-              {cityList[key]?.map(({ label, value, children }: CityItem) => (
-                <List.Item key={value} className="flex flex-col !items-start">
-                  <div
-                    className="cursor-pointer select-none hover:bg-gray-100 px-10 text-base"
-                    style={{ userSelect: "none" }}
-                    onClick={() =>
-                      handleClick(
-                        { value, label },
-                        key !== "当前城市" && key !== "热门城市"
-                          ? onClick.bind(null, { value, label, key })
-                          : () => {},
-                        onDoubleClick,
-                        {
-                          clickTimeoutRef,
-                          lastClickElementRef,
-                        }
+              {cityList[key]?.map(
+                ({ label, value, children, coord }: CityItem) => (
+                  <List.Item key={value} className="flex flex-col !items-start">
+                    <div
+                      className="cursor-pointer select-none hover:bg-gray-100 px-10 text-base"
+                      style={{ userSelect: "none" }}
+                      onClick={() =>
+                        handleClick(
+                          { value, label, coord },
+                          key !== "当前城市" && key !== "热门城市"
+                            ? onClick.bind(null, { value, label, key })
+                            : () => {},
+                          onDoubleClick,
+                          {
+                            clickTimeoutRef,
+                            lastClickElementRef,
+                          }
+                        )
+                      }
+                    >
+                      {label}
+                    </div>
+                    {children?.map(
+                      ({
+                        label: childLabel,
+                        value: childValue,
+                        coord: childCoord,
+                      }: CityItem) => (
+                        <div
+                          key={childValue}
+                          onClick={() =>
+                            handleClick(
+                              {
+                                value: childValue,
+                                label: childLabel,
+                                coord: childCoord,
+                              },
+                              onClick.bind(null, {
+                                value: childValue,
+                                label: childLabel,
+                                key,
+                              }),
+                              onDoubleClick,
+                              { clickTimeoutRef, lastClickElementRef }
+                            )
+                          }
+                          className="w-full h-10 cursor-pointer select-none hover:bg-gray-100 px-18 first:mt-4 flex items-center border-b border-[var(--color-gap-gray)] last:border-b-0 text-sm"
+                        >
+                          {childLabel}
+                        </div>
                       )
-                    }
-                  >
-                    {label}
-                  </div>
-                  {children?.map(
-                    ({ label: childLabel, value: childValue }: CityItem) => (
-                      <div
-                        key={childValue}
-                        onClick={() =>
-                          handleClick(
-                            { value: childValue, label: childLabel },
-                            onClick.bind(null, {
-                              value: childValue,
-                              label: childLabel,
-                              key,
-                            }),
-                            onDoubleClick,
-                            { clickTimeoutRef, lastClickElementRef }
-                          )
-                        }
-                        className="w-full h-10 cursor-pointer select-none hover:bg-gray-100 px-18 first:mt-4 flex items-center border-b border-[var(--color-gap-gray)] last:border-b-0 text-sm"
-                      >
-                        {childLabel}
-                      </div>
-                    )
-                  )}
-                </List.Item>
-              ))}
+                    )}
+                  </List.Item>
+                )
+              )}
             </div>
           ))}
         </List>

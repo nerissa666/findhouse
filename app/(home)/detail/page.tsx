@@ -1,17 +1,25 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Button, Swiper, Tag, Toast } from "antd-mobile";
+import SafeSwiper from "@/components/SafeSwiper";
 import { useSearchParams } from "next/navigation";
 import axios from "@/lib/axios";
-import styles from "./index.module.scss";
 import { RECOMMEND_HOUSES } from "@/lib/consts";
 
 import { BASE_URL, HOUSE_PACKAGE } from "@/lib/consts";
 import { getTagColor } from "@/lib/utils";
-import HouseList from "@/components/HouseList";
+import dynamic from "next/dynamic";
+const HouseList = dynamic(() => import("@/components/HouseList"), {
+  ssr: false,
+  loading: () => <div className="h-12 bg-gray-100 animate-pulse rounded"></div>,
+});
 import { House, HouseInfo } from "@/app/types";
-import SearchBar from "@/components/SearchBar";
+const SearchBar = dynamic(() => import("@/components/SearchBar"), {
+  ssr: false,
+  loading: () => <div className="h-12 bg-gray-100 animate-pulse rounded"></div>,
+});
 import Image from "next/image";
+import styles from "./index.module.scss";
 
 export default () => {
   const searchParams = useSearchParams();
@@ -50,6 +58,7 @@ export default () => {
         />
       </Swiper.Item>
     )) ?? [];
+
   useEffect(() => {
     // 获取收藏状态
     const fetchCollectStatus = async () => {
@@ -116,15 +125,25 @@ export default () => {
             title: data?.community,
           }}
         />
-        <Swiper
-          loop
-          autoplay
-          //   onIndexChange={(i) => {
-          //     console.log(i, "onIndexChange1");
-          //   }}
+        <SafeSwiper
+          fallback={
+            <Swiper.Item key="placeholder">
+              <div
+                className={styles.content}
+                style={{
+                  backgroundImage: `url(${BASE_URL}/img/placeholder.png)`,
+                  backgroundColor: "#f5f5f5",
+                }}
+              >
+                <div className="flex items-center justify-center h-full text-gray-500">
+                  暂无图片
+                </div>
+              </div>
+            </Swiper.Item>
+          }
         >
           {items}
-        </Swiper>
+        </SafeSwiper>
       </div>
       <div className="py-[15px]">
         <h3 className="text-base text-[#333]  font-normal">{data?.title}</h3>

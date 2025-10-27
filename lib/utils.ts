@@ -16,7 +16,7 @@ export function getTagColor(tag: string): string {
 }
 // 处理点击事件 单击和双击
 export function handleClick(
-  { value, label }: SelectOption,
+  option: SelectOption,
   onClick: (option: SelectOption) => void,
   onDoubleClick: (option: SelectOption) => void,
   {
@@ -27,11 +27,12 @@ export function handleClick(
     lastClickElementRef: RefObject<string | null>;
   }
 ) {
+  const { value } = option;
   if (clickTimeoutRef.current && lastClickElementRef.current === value) {
     clearTimeout(clickTimeoutRef.current);
     clickTimeoutRef.current = null;
     lastClickElementRef.current = null;
-    onDoubleClick({ value, label });
+    onDoubleClick(option);
     return;
   }
   if (clickTimeoutRef.current) {
@@ -39,7 +40,7 @@ export function handleClick(
   }
   lastClickElementRef.current = value;
   clickTimeoutRef.current = setTimeout(() => {
-    onClick({ value, label });
+    onClick(option);
     clickTimeoutRef.current = null;
     lastClickElementRef.current = null;
   }, 300);

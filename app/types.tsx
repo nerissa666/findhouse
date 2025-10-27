@@ -69,11 +69,18 @@ export type CityListGrouped = {
 export interface SelectOption {
   label?: string;
   value: string;
+  coord?: Coord;
+}
+export interface Coord {
+  latitude: string;
+  longitude: string;
+}
+export interface AreaItem extends CityItem {
+  coord: Coord;
+  count: string;
 }
 
 export interface RouteItem {
   list: ListItem[];
   style: string;
 }
-
-

@@ -2,10 +2,17 @@
 import { ErrorBlock } from "antd-mobile";
 import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
-import HouseList from "@/components/HouseList";
+import dynamic from "next/dynamic";
+const SearchBar = dynamic(() => import("@/components/SearchBar"), {
+  ssr: false,
+  loading: () => <div className="h-12 bg-gray-100 animate-pulse rounded"></div>,
+});
+const HouseList = dynamic(() => import("@/components/HouseList"), {
+  ssr: false,
+  loading: () => <div className="h-12 bg-gray-100 animate-pulse rounded"></div>,
+});
 import { House } from "@/app/types";
 import axios from "@/lib/axios";
-import SearchBar from "@/components/SearchBar";
 export default () => {
   const [data, setData] = useState<House[]>([]);
 

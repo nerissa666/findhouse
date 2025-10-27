@@ -17,14 +17,12 @@ const axiosInstance = axios.create({
 // 请求拦截器
 axiosInstance.interceptors.request.use(
   (config) => {
-    console.log("config:", config);
     // 在发送请求之前做些什么，比如添加认证 token
     // 直接从localStorage获取token，避免在拦截器中使用React Hooks
     const token =
       typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
     if (token) {
-      console.log("token:", token);
       // config.headers.Authorization = `Bearer ${token}`;
       config.headers.Authorization = token;
     }
@@ -33,16 +31,13 @@ axiosInstance.interceptors.request.use(
   },
   (error) => {
     // 对请求错误做些什么
-    console.log("errorXxx", error);
     controller.abort();
-    return Promise.reject(error);
   }
 );
 
 // 响应拦截器
 axiosInstance.interceptors.response.use(
   (response) => {
-    console.log("response:", response);
     const { data } = response;
 
     // 检查响应数据结构
@@ -50,10 +45,8 @@ axiosInstance.interceptors.response.use(
       // 如果数据有 status 和 body 字段
       if ("status" in data && "body" in data) {
         if (data.status === 200) {
-          console.log("body:", data.body);
           return data.body;
         } else {
-          return Promise.reject(new Error(`API Error: ${data.status}`));
         }
       }
       // 如果数据直接是结果，没有包装

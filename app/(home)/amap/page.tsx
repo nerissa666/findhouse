@@ -1,105 +1,143 @@
 "use client";
-import { useState } from "react";
-import AmapExample from "@/components/AmapExample";
-import { Button } from "antd-mobile";
-
+import { useState, useEffect, useCallback } from "react";
+import dynamic from "next/dynamic";
+const AmapExample = dynamic(() => import("@/components/AmapExample"), {
+  ssr: false,
+  loading: () => <div className="h-12 bg-gray-100 animate-pulse rounded"></div>,
+});
+const SearchBar = dynamic(() => import("@/components/SearchBar"), {
+  ssr: false,
+  loading: () => <div className="h-12 bg-gray-100 animate-pulse rounded"></div>,
+});
+const LocationButton = dynamic(() => import("@/components/LocationButton"), {
+  ssr: false,
+  loading: () => <div className="h-12 bg-gray-100 animate-pulse rounded"></div>,
+});
+const HouseList = dynamic(() => import("@/components/HouseList"), {
+  ssr: false,
+  loading: () => <div className="h-12 bg-gray-100 animate-pulse rounded"></div>,
+});
+import { useAppSelector } from "@/lib/hooks";
+import axios from "@/lib/axios";
+import { AreaItem, House } from "@/app/types";
+import { getCityMapCenter } from "@/lib/utils/cityUtils";
+import { LocationData } from "@/lib/utils/locationUtils";
 export default function AmapPage() {
-  const [selectedPosition, setSelectedPosition] = useState<{
-    lng: number;
-    lat: number;
-  } | null>(null);
+  const city = useAppSelector((state) => state.city.currentCity);
 
-  const [markers, setMarkers] = useState([
-    {
-      position: { lng: 116.397428, lat: 39.90923 },
-      title: "天安门",
-      content:
-        "<div style='padding: 10px;'><h4>天安门</h4><p>北京市东城区</p></div>",
-    },
-    {
-      position: { lng: 116.407526, lat: 39.90403 },
-      title: "故宫",
-      content:
-        "<div style='padding: 10px;'><h4>故宫博物院</h4><p>北京市东城区景山前街4号</p></div>",
-    },
-  ]);
+  // const [selectedPosition, setSelectedPosition] = useState<{
+  //   lng: number;
+  //   lat: number;
+  // } | null>(null);
+  const [markers, setMarkers] = useState<AreaItem[]>([]);
+  const [houseList, setHouseList] = useState<House[]>([]);
+  const [details, setDetails] = useState<boolean>(false);
+  const [currentLocation, setCurrentLocation] = useState<LocationData | null>(
+    null
+  );
 
-  const handleMapClick = (lng: number, lat: number) => {
-    setSelectedPosition({ lng, lat });
-    console.log("点击位置:", { lng, lat });
+  // 获取城市坐标，如果城市有坐标则使用，否则使用默认坐标
+  const mapCenter = getCityMapCenter(city);
+  // 检查城市是否有坐标数据
+  // const hasCoordinates = hasCityCoordinates(city);
+
+  // 处理定位变化
+  const handleLocationChange = (location: LocationData) => {
+    setCurrentLocation(location);
+    // 可以在这里添加其他逻辑，比如自动搜索附近的房源
   };
+  // const handleMapClick = (lng: number, lat: number) => {
+  //   setSelectedPosition({ lng, lat });
+  // };
 
-  const addMarker = () => {
-    if (selectedPosition) {
-      const newMarker = {
-        position: selectedPosition,
-        title: `标记点 ${markers.length + 1}`,
-        content: `<div style='padding: 10px;'><h4>标记点 ${
-          markers.length + 1
-        }</h4><p>经度: ${selectedPosition.lng.toFixed(
-          6
-        )}</p><p>纬度: ${selectedPosition.lat.toFixed(6)}</p></div>`,
-      };
-      setMarkers([...markers, newMarker]);
+  // const addMarker = () => {
+  //   if (selectedPosition) {
+  //     const newMarker: AreaItem = {
+  //       label: `标记点 ${markers.length + 1}`,
+  //       value: `marker_${markers.length + 1}`,
+  //       coord: {
+  //         latitude: selectedPosition.lat.toString(),
+  //         longitude: selectedPosition.lng.toString(),
+  //       },
+  //       count: "1",
+  //     };
+  //     setMarkers([...markers, newMarker]);
+  //   }
+  // };
+
+  // const clearMarkers = () => {
+  //   setMarkers([]);
+  //   setSelectedPosition(null);
+  // };
+
+  const handleDrillDown = useCallback((id: string, detail?: boolean) => {
+    console.log(222);
+    setDetails(!!detail);
+
+    if (detail) {
+      axios.get(`/houses?cityId=${id}`).then((res) => {
+        setHouseList(res.list as unknown as House[]); // 谁让你乱改这些liner了 你就让他提示呗..
+        // cursor 就因为你 我每天打开都做重复的事情。。。。。
+        // 服了 你是来添乱的吧 最近智力也下降了 。。。
+      });
+    } else {
+      axios.get(`/area/map?id=${id}`).then((res) => {
+        console.log("设置 markers", res);
+        setMarkers(res as unknown as AreaItem[]);
+      });
     }
-  };
+  }, []);
 
-  const clearMarkers = () => {
-    setMarkers([]);
-    setSelectedPosition(null);
-  };
-
+  useEffect(() => {
+    console.log(111);
+    handleDrillDown(city.value);
+  }, []);
   return (
-    <div className="p-4">
-      <h1 className="text-xl font-bold mb-4">高德地图示例</h1>
+    <div className="">
+      <SearchBar from="/amap" cpnts={{ map: false, share: false }} />
 
-      {/* 地图容器 */}
-      <div className="mb-4">
-        <AmapExample
-          center={{ lng: 116.397428, lat: 39.90923 }}
-          zoom={12}
-          height="500px"
-          onMapClick={handleMapClick}
-          markers={markers}
+      {/* 定位按钮 */}
+      <div className="absolute top-20 right-4 z-10">
+        <LocationButton
+          onLocationChange={handleLocationChange}
+          withAddress={true}
+          showAddress={true}
+          size="middle"
+          type="primary"
         />
       </div>
 
-      {/* 控制面板 */}
-      <div className="space-y-4">
-        <div className="p-4 bg-gray-50 rounded-lg">
-          <h3 className="font-semibold mb-2">地图操作</h3>
-          <div className="flex gap-2 flex-wrap">
-            <Button
-              color="primary"
-              onClick={addMarker}
-              disabled={!selectedPosition}
-            >
-              添加标记点
-            </Button>
-            <Button color="danger" onClick={clearMarkers}>
-              清除所有标记
-            </Button>
-          </div>
-        </div>
-
-        {selectedPosition && (
-          <div className="p-4 bg-blue-50 rounded-lg">
-            <h3 className="font-semibold mb-2">选中位置</h3>
-            <p>经度: {selectedPosition.lng.toFixed(6)}</p>
-            <p>纬度: {selectedPosition.lat.toFixed(6)}</p>
-          </div>
-        )}
-
-        <div className="p-4 bg-green-50 rounded-lg">
-          <h3 className="font-semibold mb-2">功能说明</h3>
-          <ul className="text-sm space-y-1">
-            <li>• 点击地图任意位置选择坐标</li>
-            <li>• 点击"添加标记点"在选中位置添加标记</li>
-            <li>• 点击标记点查看详细信息</li>
-            <li>• 支持地图缩放和拖拽</li>
-          </ul>
-        </div>
+      {/* 地图容器 */}
+      <div className="h-full">
+        <AmapExample
+          center={
+            currentLocation
+              ? { lng: currentLocation.lng, lat: currentLocation.lat }
+              : mapCenter
+          }
+          zoom={currentLocation ? 15 : 10}
+          height="100vh"
+          onMapClick={() => {}}
+          markers={markers}
+          onDrillDown={handleDrillDown}
+        />
       </div>
+      {details && (
+        <div className="fixed bottom-0 left-0 right-0 z-100 bg-white h-[40%] overflow-y-scroll overflow-x-hidden scrollbar-hide">
+          <SearchBar
+            from="/amap/houseList"
+            absolute={false}
+            cpnts={{
+              map: false,
+              back: false,
+              share: false,
+              select: false,
+              title: "房源列表",
+            }}
+          />
+          <HouseList data={houseList} total={houseList.length} />
+        </div>
+      )}
     </div>
   );
 }

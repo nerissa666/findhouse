@@ -71,7 +71,7 @@ const Carousel = () => {
         {data.map((item) => (
           <div key={item.id}>
             <h3>
-              <Image alt={item.alt} src={item.imgSrc} />
+              <Image alt={item.alt} src={item.imgSrc} width="100%" />
             </h3>
           </div>
         ))}

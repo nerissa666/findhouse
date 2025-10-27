@@ -1,5 +1,15 @@
 "use client";
-import { Menu } from "../menu";
+import dynamic from "next/dynamic";
+
+// 优化的 Dynamic Import
+const Menu = dynamic(() => import("../menu").then((mod) => mod.Menu), {
+  loading: () => (
+    <div className="flex justify-center items-center py-8">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#21b97a]"></div>
+    </div>
+  ),
+  ssr: false, // Menu 组件不需要服务端渲染
+});
 import { useRef, useState, useEffect } from "react";
 import { ListItem } from "@/app/types";
 import Image from "next/image";

@@ -20,10 +20,15 @@ export default ({
 
   useEffect(() => {
     const calculateHeight = () => {
-      const vh = window.innerHeight;
+      const vh = window.innerHeight || 600; // 提供默认值
+      const dataLength = data?.length || 0; // 确保 data.length 有值
       const height = vh - 100; // 100vh - 100px
-      console.log(data.length, "data.length");
-      setContainerHeight(Math.min(ROW_HEIGHT * data.length, height)); // 使用视口高度的40%作为最小高度
+      const calculatedHeight = Math.min(ROW_HEIGHT * dataLength, height);
+
+      // 确保计算出的高度是有效数字
+      const validHeight = isNaN(calculatedHeight) ? 600 : calculatedHeight;
+
+      setContainerHeight(validHeight);
     };
 
     calculateHeight();
@@ -97,15 +102,14 @@ export default ({
       <AutoSizer disableHeight>
         {({ width, height }: { width: number; height: number }) => (
           <VirtualizedList
-            rowCount={data.length}
+            rowCount={data?.length || 0}
             rowRenderer={rowRenderer}
             width={width}
             // height={110 * data.length}
-            height={containerHeight}
+            height={containerHeight || 600}
             rowHeight={ROW_HEIGHT}
             overscanRowCount={10}
             onRowsRendered={({ stopIndex }) => {
-              console.log(height, "height");
               handleRowsRendered({ stopIndex });
             }}
             className={styles.virtualizedList}

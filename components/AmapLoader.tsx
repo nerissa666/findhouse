@@ -17,32 +17,40 @@ export default function AmapLoader({ onLoad, onError }: AmapLoaderProps) {
       return;
     }
 
-    // 创建script标签加载高德地图API
-    const script = document.createElement("script");
-    script.src = `https://webapi.amap.com/maps?v=2.0&key=${process.env.NEXT_PUBLIC_AMAP_KEY}&callback=initAMap`;
-    script.async = true;
-    script.defer = true;
+    // 使用动态导入方式加载
+    const loadAMap = async () => {
+      try {
+        // 创建script标签加载高德地图API
+        const script = document.createElement("script");
+        script.src = `https://webapi.amap.com/maps?v=2.0&key=${process.env.NEXT_PUBLIC_AMAP_KEY}`;
+        script.async = true;
+        script.defer = true;
+        script.crossOrigin = "anonymous";
 
-    // 设置全局回调函数
-    (window as any).initAMap = () => {
-      setLoaded(true);
-      onLoad();
-    };
+        // 等待脚本加载完成
+        await new Promise((resolve, reject) => {
+          script.onload = resolve;
+          script.onerror = reject;
+          document.head.appendChild(script);
+        });
 
-    script.onerror = (error) => {
-      console.error("高德地图加载失败:", error);
-      onError(error);
-    };
-
-    document.head.appendChild(script);
-
-    return () => {
-      // 清理
-      if (script.parentNode) {
-        script.parentNode.removeChild(script);
+        // 等待AMap对象可用
+        const checkAMap = () => {
+          if (window.AMap) {
+            setLoaded(true);
+            onLoad();
+          } else {
+            setTimeout(checkAMap, 100);
+          }
+        };
+        checkAMap();
+      } catch (error) {
+        console.error("高德地图加载失败:", error);
+        onError(error);
       }
-      delete (window as any).initAMap;
     };
+
+    loadAMap();
   }, [onLoad, onError]);
 
   return null;

@@ -1,9 +1,16 @@
 "use client";
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import axios from "@/lib/axios";
-import { HousesBody, House, SelectOption } from "@/app/types";
-import HouseList from "@/components/HouseList";
-import SearchBar from "@/components/SearchBar";
+import { HousesBody, House } from "@/app/types";
+import dynamic from "next/dynamic";
+const HouseList = dynamic(() => import("@/components/HouseList"), {
+  ssr: false,
+  loading: () => <div className="h-12 bg-gray-100 animate-pulse rounded"></div>,
+});
+const SearchBar = dynamic(() => import("@/components/SearchBar"), {
+  ssr: false,
+  loading: () => <div className="h-12 bg-gray-100 animate-pulse rounded"></div>,
+});
 import { useAppSelector } from "@/lib/hooks";
 import { useSearchParams } from "next/navigation";
 const PAGE_SIZE = 20;
@@ -15,9 +22,7 @@ export default () => {
   const [data, setData] = useState<House[]>([]);
   const [total, setTotal] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
-
   const totalSetRef = useRef(false);
-
   const featchMoreData = useCallback(() => {
     setLoading(true);
     fetchData(data.length + 1)
@@ -30,12 +35,11 @@ export default () => {
         }
       })
       .finally(() => setLoading(false));
-  }, [data.length]);
+  }, [data.length]); // 这里依赖的是data.length吗？
 
   const fetchData = async (start = 1): Promise<HousesBody> => {
     // 检查必需参数
     if (!city.value) {
-      console.warn("City value is empty, cannot fetch houses");
       throw new Error("City is required");
     }
 
@@ -54,13 +58,12 @@ export default () => {
         end: start + PAGE_SIZE,
       },
     });
-    console.log(res, "res");
     return res as unknown as HousesBody;
   };
 
   useEffect(() => {
     featchMoreData();
-  }, [rentType]);
+  }, [rentType]); // 依赖项还需考究
 
   return (
     <>

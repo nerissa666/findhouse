@@ -1,22 +1,40 @@
 "use client";
-import SearchBar from "@/components/SearchBar/page";
+import dynamic from "next/dynamic";
+const SearchBar = dynamic(() => import("@/components/SearchBar/page"), {
+  ssr: false,
+  loading: () => <div className="h-12 bg-gray-100 animate-pulse rounded"></div>,
+});
 import {
   Form,
   Input,
   TextArea,
   Button,
-  Picker,
-  ImageUploader,
   ImageUploadItem,
   Toast,
 } from "antd-mobile";
+const Picker = dynamic(() => import("antd-mobile").then((mod) => mod.Picker), {
+  ssr: false,
+  loading: () => <div className="h-12 bg-gray-100 animate-pulse rounded"></div>,
+});
+const ImageUploader = dynamic(
+  () => import("antd-mobile").then((mod) => mod.ImageUploader),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-12 bg-gray-100 animate-pulse rounded"></div>
+    ),
+  }
+);
+const Select = dynamic(() => import("antd").then((mod) => mod.Select), {
+  ssr: false,
+  loading: () => <div className="h-12 bg-gray-100 animate-pulse rounded"></div>,
+});
 import { useState, useEffect, useRef } from "react";
 import { CommunityItem, SelectOption } from "@/app/types";
 import styles from "../index.module.scss";
 import { BASE_URL, HOUSE_PACKAGE } from "@/lib/consts";
 // import { useRouter } from "next/navigation";
 import axios from "@/lib/axios";
-import { Select } from "antd";
 import { useAppSelector } from "@/lib/hooks";
 import { handleSearch as debounce } from "@/lib/utils";
 import { useRouter } from "next/navigation";
@@ -167,8 +185,6 @@ export default function Rent() {
               onClick={() => {
                 // 重置表单字段
                 form.resetFields();
-                setSupportingValue([]);
-
                 // router.back();
               }}
             >
@@ -237,19 +253,19 @@ export default function Rent() {
               }
             />
           </div>
-          <Picker
-            columns={[params.roomType]}
-            visible={visible}
-            onClose={() => {
-              setVisible(false);
-            }}
-            value={form.getFieldValue("roomType") || []}
-            onConfirm={(v) => {
-              form.setFieldValue("roomType", v as (string | null)[]);
-              setVisible(false);
-            }}
-          />
         </Form.Item>
+        <Picker
+          columns={[params.roomType]}
+          visible={visible}
+          onClose={() => {
+            setVisible(false);
+          }}
+          value={form.getFieldValue("roomType") || []}
+          onConfirm={(v) => {
+            form.setFieldValue("roomType", v as (string | null)[]);
+            setVisible(false);
+          }}
+        />
         <Form.Item
           name="floor"
           label="楼层"
@@ -268,19 +284,19 @@ export default function Rent() {
               }
             />
           </div>
-          <Picker
-            columns={[params.floor]}
-            visible={floorVisible}
-            onClose={() => {
-              setFloorVisible(false);
-            }}
-            value={form.getFieldValue("floor") || []}
-            onConfirm={(v) => {
-              form.setFieldValue("floor", v as (string | null)[]);
-              setFloorVisible(false);
-            }}
-          />
         </Form.Item>
+        <Picker
+          columns={[params.floor]}
+          visible={floorVisible}
+          onClose={() => {
+            setFloorVisible(false);
+          }}
+          value={form.getFieldValue("floor") || []}
+          onConfirm={(v) => {
+            form.setFieldValue("floor", v as (string | null)[]);
+            setFloorVisible(false);
+          }}
+        />
         <Form.Item
           name="oriented"
           label="朝向"
@@ -300,19 +316,19 @@ export default function Rent() {
               }
             />
           </div>
-          <Picker
-            columns={[params.oriented]}
-            visible={orientedVisible}
-            onClose={() => {
-              setOrientedVisible(false);
-            }}
-            value={form.getFieldValue("oriented") || []}
-            onConfirm={(v) => {
-              form.setFieldValue("oriented", v as (string | null)[]);
-              setOrientedVisible(false);
-            }}
-          />
         </Form.Item>
+        <Picker
+          columns={[params.oriented]}
+          visible={orientedVisible}
+          onClose={() => {
+            setOrientedVisible(false);
+          }}
+          value={form.getFieldValue("oriented") || []}
+          onConfirm={(v) => {
+            form.setFieldValue("oriented", v as (string | null)[]);
+            setOrientedVisible(false);
+          }}
+        />
 
         <Form.Item name="title" label="标题">
           <TextArea

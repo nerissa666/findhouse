@@ -1,11 +1,14 @@
 "use client";
-import SearchBar from "@/components/SearchBar";
+import dynamic from "next/dynamic";
+const SearchBar = dynamic(() => import("@/components/SearchBar"), {
+  ssr: false,
+  loading: () => <div className="h-12 bg-gray-100 animate-pulse rounded"></div>,
+});
 import {
   Button,
   Form,
   ImageUploader,
   ImageUploadItem,
-  Input,
   Radio,
 } from "antd-mobile";
 import { BASE_URL } from "@/lib/consts";
@@ -14,6 +17,8 @@ import axios from "@/lib/axios";
 import { useAppSelector } from "@/lib/hooks";
 import { useRouteHistory } from "@/lib/hooks/useRouteHistory";
 import { message } from "antd";
+import { safeSetFieldsValue, processApiResponse } from "@/lib/utils/formUtils";
+import SafeInput from "@/components/SafeInput";
 export default () => {
   const [form] = Form.useForm();
   const [fileList, setFileList] = useState<ImageUploadItem[]>([]);
@@ -56,11 +61,12 @@ export default () => {
     axios.get("/user").then(({ avatar, ...rest }) => {
       if (avatar) {
         setFileList([{ url: avatar }]);
-        setTimeout(() => {
-          console.log(fileList, "fileList");
-        }, 3000);
+        setTimeout(() => {}, 3000);
       }
-      form.setFieldsValue(rest);
+
+      // 使用工具函数安全设置表单值
+      const cleanedData = processApiResponse(rest);
+      safeSetFieldsValue(form, cleanedData);
     });
   }, [user?.id]);
   return (
@@ -105,7 +111,7 @@ export default () => {
         }
       >
         <Form.Item name="nickname" label="昵称">
-          <Input placeholder="请输入昵称" clearable />
+          <SafeInput placeholder="请输入昵称" clearable defaultValue="" />
         </Form.Item>
         <Form.Item name="gender" label="性别">
           <Radio.Group>
@@ -131,7 +137,7 @@ export default () => {
           </Radio.Group>
         </Form.Item>
         <Form.Item name="phone" label="电话">
-          <Input placeholder="请输入电话" clearable />
+          <SafeInput placeholder="请输入电话" clearable defaultValue="" />
         </Form.Item>
         <Form.Item name="avatar" label="头像">
           <ImageUploader

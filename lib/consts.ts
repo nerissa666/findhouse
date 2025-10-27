@@ -25,6 +25,7 @@ export const HOUSE_PACKAGE = {
   热水器: "icon-heater",
   宽带: "icon-broadband",
   沙发: "icon-sofa",
+  床: "icon-Bed",
 };
 
 // 猜你喜欢

@@ -14,7 +14,6 @@ const useSelected = () => useContext(SelectedContext);
 
 const HeroLink = ({ link }: { link: ListItem }) => {
   const selectedPage = useSelectedPage();
-  console.log(selectedPage, "selectedPage");
   const { selected, icon } = useSelected(); // 从 Context 获取 selected
   return (
     <Link

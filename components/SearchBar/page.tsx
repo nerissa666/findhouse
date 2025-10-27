@@ -44,7 +44,7 @@ export default ({
     setLocation(value);
   };
   const onSelect = () => {
-    router.push(`/map`);
+    router.push(`/amap`);
   };
 
   //
@@ -69,15 +69,12 @@ export default ({
         },
       })
       .then((res) => {
-        console.log(res, "res");
-
         setOptions(
           (res as unknown as CommunityItem[]).map((item: CommunityItem) => ({
             value: item.community,
             label: item.communityName,
           }))
         );
-        console.log(options, "options");
       })
       .catch(() => {
         setOptions([]);
@@ -169,7 +166,7 @@ export default ({
               : " text-[var(--adm-color-text)]"
           }  cursor-pointer`}
           onClick={() => {
-            router.push(`/map?value=${cityValue}`);
+            router.push(`/amap?value=${cityValue}`);
           }}
         ></i>
       )}

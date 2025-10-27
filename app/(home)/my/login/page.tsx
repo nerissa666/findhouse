@@ -1,5 +1,9 @@
 "use client";
-import SearchBar from "@/components/SearchBar";
+import dynamic from "next/dynamic";
+const SearchBar = dynamic(() => import("@/components/SearchBar"), {
+  ssr: false,
+  loading: () => <div className="h-12 bg-gray-100 animate-pulse rounded"></div>,
+});
 import { Form, Input, Button, Checkbox, Toast } from "antd-mobile";
 import axios from "@/lib/axios";
 import { useRouter } from "next/navigation";
@@ -12,7 +16,6 @@ export default () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [isRegist, setIsRegist] = useState(false);
   const onFinish = (values: { username: string; password: string }) => {
-    console.log(values);
     if (isRegist) {
       axios.post<{ token: string }>("/user/registered", values).then((res) => {
         Toast.show("注册成功");
@@ -20,7 +23,6 @@ export default () => {
       });
     } else {
       axios.post<{ token: string }>("/user/login", values).then((res) => {
-        console.log(res, "res");
         // 登录成功后返回上一页
         if ((res as unknown as { token: string }).token) {
           // 设置token到Redux store（无论是否记住我都要设置）
@@ -83,7 +85,7 @@ export default () => {
 
         {!isRegist && (
           <>
-            <Form.Item>
+            <Form.Item label="">
               <div className="flex items-center justify-between px-2">
                 <Checkbox
                   checked={rememberMe}
@@ -100,7 +102,7 @@ export default () => {
                 </span>
               </div>
             </Form.Item>
-            <Form.Item>
+            <Form.Item label="">
               暂无账号，去
               <Button
                 size="small"
