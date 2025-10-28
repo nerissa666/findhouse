@@ -70,38 +70,76 @@ export default function Rent() {
     roomType: SelectOption[];
     supporting: SelectOption[];
   }
-  const onUpload = (files: File): Promise<ImageUploadItem> => {
-    // 只返回新的图片项，不在这里修改fileList
-    // fileList的更新由onChange回调处理
+  const onUpload = async (files: File): Promise<ImageUploadItem> => {
+    // 检查文件类型
+    if (!files.type.startsWith("image/")) {
+      throw new Error("请选择有效的图片文件");
+    }
+
+    // 检查文件大小 (5MB限制)
+    if (files.size > 5 * 1024 * 1024) {
+      throw new Error("图片大小不能超过5MB");
+    }
+
     const formData = new FormData();
     formData.append("file", files);
-    return axios
-      .post("/houses/image", formData, {
+
+    try {
+      const res = await axios.post("/houses/image", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-      })
-      .then((res) => {
-        return {
-          url: BASE_URL + res.data,
-          key: Date.now().toString(),
-        };
-      })
-      .catch((error) => {
-        console.error("Upload failed:", error);
-        // 返回一个临时的预览 URL
-        return {
-          url: URL.createObjectURL(files),
-          key: Date.now().toString(),
-        };
       });
+      // 确保URL正确拼接
+      let imageUrl = res[0];
+      if (!imageUrl || typeof imageUrl !== "string") {
+        throw new Error("服务器返回的数据格式错误");
+      }
+
+      if (!imageUrl.startsWith("http")) {
+        // 如果BASE_URL为空，使用默认的代理路径
+        const baseUrl = BASE_URL || "http://localhost:8080";
+        imageUrl =
+          baseUrl + (imageUrl.startsWith("/") ? imageUrl : "/" + imageUrl);
+      }
+
+      // 测试图片URL是否可访问
+      try {
+        const testResponse = await fetch(imageUrl, { method: "HEAD" });
+        console.log("图片URL测试结果:", testResponse.status);
+      } catch (testError) {
+        console.warn("图片URL测试失败:", testError);
+      }
+
+      return {
+        url: imageUrl,
+        key: Date.now().toString(),
+      };
+    } catch (error) {
+      // 使用FileReader创建持久的base64预览
+      const previewUrl = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          resolve(e.target?.result as string);
+        };
+        reader.onerror = () => {
+          reject(new Error("文件读取失败"));
+        };
+        reader.readAsDataURL(files);
+      });
+
+      console.log("使用预览URL:", previewUrl.substring(0, 50) + "...");
+
+      return {
+        url: previewUrl,
+        key: Date.now().toString(),
+      };
+    }
   };
 
   const onFinish = (
     values: Record<string, string | number | (string | null)[]>
   ) => {
-    console.log("开始提交表单...");
-
     // 测试 Toast 是否工作
     Toast.show("正在提交...");
 
@@ -124,17 +162,14 @@ export default function Rent() {
     axios
       .post("/user/houses", formData)
       .then((res) => {
-        console.log("提交成功", res);
         // 使用简单的字符串形式，与其他地方保持一致
         // Toast.show("提交成功");
         // // 延迟一下再返回，确保 Toast 显示
         setTimeout(() => {
-          console.log("准备返回上一页");
           router.back();
         }, 1500);
       })
       .catch((error) => {
-        console.error("提交失败:", error);
         Toast.show("提交失败，请重试");
       });
   };
@@ -342,10 +377,11 @@ export default function Rent() {
           <ImageUploader
             value={fileList || []}
             onChange={(newFileList) => {
-              console.log("ImageUploader onChange:", newFileList);
               setFileList(newFileList || []);
             }}
             upload={onUpload}
+            maxCount={9}
+            multiple
           />
         </Form.Item>
         <Form.Item label="房屋配置">

@@ -2,6 +2,7 @@
 import { store } from "@/lib/stores/store";
 import { Provider } from "react-redux";
 import AuthInitializer from "./AuthInitializer";
+import GetCurrentLocation from "./GetCurrentLocation";
 
 export default function Providers({
   children,
@@ -11,6 +12,7 @@ export default function Providers({
   return (
     <Provider store={store}>
       <AuthInitializer />
+      <GetCurrentLocation />
       {children}
     </Provider>
   );

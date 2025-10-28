@@ -27,17 +27,10 @@ export default function LocationButton({
   size = "middle",
   type = "primary",
 }: LocationButtonProps) {
-  const {
-    location,
-    error,
-    loading,
-    supported,
-    permission,
-    getLocation,
-    clearLocation,
-  } = useLocation({
-    withAddress,
-  });
+  const { location, error, loading, supported, permission, getLocation } =
+    useLocation({
+      withAddress,
+    });
 
   const [messageApi, contextHolder] = message.useMessage();
 

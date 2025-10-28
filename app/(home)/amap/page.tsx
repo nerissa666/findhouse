@@ -35,7 +35,8 @@ export default function AmapPage() {
   const [currentLocation, setCurrentLocation] = useState<LocationData | null>(
     null
   );
-
+  const [location, setLocation] = useState<string>("");
+  const [locat, setLocat] = useState<string>("");
   // 获取城市坐标，如果城市有坐标则使用，否则使用默认坐标
   const mapCenter = getCityMapCenter(city);
   // 检查城市是否有坐标数据
@@ -46,57 +47,32 @@ export default function AmapPage() {
     setCurrentLocation(location);
     // 可以在这里添加其他逻辑，比如自动搜索附近的房源
   };
-  // const handleMapClick = (lng: number, lat: number) => {
-  //   setSelectedPosition({ lng, lat });
-  // };
-
-  // const addMarker = () => {
-  //   if (selectedPosition) {
-  //     const newMarker: AreaItem = {
-  //       label: `标记点 ${markers.length + 1}`,
-  //       value: `marker_${markers.length + 1}`,
-  //       coord: {
-  //         latitude: selectedPosition.lat.toString(),
-  //         longitude: selectedPosition.lng.toString(),
-  //       },
-  //       count: "1",
-  //     };
-  //     setMarkers([...markers, newMarker]);
-  //   }
-  // };
-
-  // const clearMarkers = () => {
-  //   setMarkers([]);
-  //   setSelectedPosition(null);
-  // };
 
   const handleDrillDown = useCallback((id: string, detail?: boolean) => {
-    console.log(222);
     setDetails(!!detail);
 
     if (detail) {
       axios.get(`/houses?cityId=${id}`).then((res) => {
-        setHouseList(res.list as unknown as House[]); // 谁让你乱改这些liner了 你就让他提示呗..
-        // cursor 就因为你 我每天打开都做重复的事情。。。。。
-        // 服了 你是来添乱的吧 最近智力也下降了 。。。
+        setHouseList(res.list as unknown as House[]);
       });
     } else {
       axios.get(`/area/map?id=${id}`).then((res) => {
-        console.log("设置 markers", res);
         setMarkers(res as unknown as AreaItem[]);
       });
     }
   }, []);
 
   useEffect(() => {
-    console.log(111);
-    handleDrillDown(city.value);
-  }, []);
+    handleDrillDown(locat || city.value, !!locat);
+  }, [locat]);
   return (
     <div className="">
-      <SearchBar from="/amap" cpnts={{ map: false, share: false }} />
-
-      {/* 定位按钮 */}
+      <SearchBar
+        from="/amap"
+        locat={setLocat}
+        cpnts={{ map: false, share: false }}
+      />
+      {/* 定位按钮
       <div className="absolute top-20 right-4 z-10">
         <LocationButton
           onLocationChange={handleLocationChange}
@@ -105,7 +81,7 @@ export default function AmapPage() {
           size="middle"
           type="primary"
         />
-      </div>
+      </div> */}
 
       {/* 地图容器 */}
       <div className="h-full">
@@ -115,6 +91,7 @@ export default function AmapPage() {
               ? { lng: currentLocation.lng, lat: currentLocation.lat }
               : mapCenter
           }
+          locat={locat}
           zoom={currentLocation ? 15 : 10}
           height="100vh"
           onMapClick={() => {}}

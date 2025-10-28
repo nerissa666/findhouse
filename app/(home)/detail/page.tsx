@@ -9,6 +9,7 @@ import { RECOMMEND_HOUSES } from "@/lib/consts";
 import { BASE_URL, HOUSE_PACKAGE } from "@/lib/consts";
 import { getTagColor } from "@/lib/utils";
 import dynamic from "next/dynamic";
+import CommunityMap from "@/components/CommunityMap";
 const HouseList = dynamic(() => import("@/components/HouseList"), {
   ssr: false,
   loading: () => <div className="h-12 bg-gray-100 animate-pulse rounded"></div>,
@@ -34,9 +35,7 @@ export default () => {
       try {
         const res = await axios.get(`/houses/${code}`);
         setData(res as unknown as HouseInfo);
-      } catch (error) {
-        console.log("请求出错", error);
-      }
+      } catch (error) {}
     };
     fetchData();
   }, [code]);
@@ -51,7 +50,12 @@ export default () => {
       <Swiper.Item key={index}>
         <div
           className={styles.content}
-          style={{ backgroundImage: `url(${BASE_URL}${color})` }}
+          style={{
+            backgroundImage: `url(${
+              color.startsWith("http") ? color : `${BASE_URL}${color}`
+            })`,
+            backgroundSize: "cover",
+          }}
           onClick={() => {
             Toast.show(`你点击了卡片 ${index + 1}`);
           }}
@@ -66,7 +70,6 @@ export default () => {
         const res = await axios.get(`/user/favorites/${code}`);
         setIsCollect((res as unknown as { isCollect: boolean }).isCollect);
       } catch (error) {
-        console.log("获取收藏状态失败:", error);
         setIsCollect(false);
       }
     };
@@ -92,7 +95,6 @@ export default () => {
                 Toast.show("收藏成功");
               }
             } catch (error) {
-              console.error("收藏操作失败:", error);
               Toast.show("操作失败，请重试");
             }
           }}
@@ -202,7 +204,11 @@ export default () => {
           <span className="text-[#666]">小区：</span>
           <span className="font-bold">{data?.community}</span>
         </div>
-        <div className="w-[375px] h-[145px] "></div>
+        <CommunityMap
+          community={data?.community || ""}
+          coord={data?.coord}
+          height="145px"
+        />
       </div>
 
       <div className={styles.houseFurniture}>
@@ -269,7 +275,6 @@ export default () => {
           <HouseList data={recommendHouses} total={1} />
         </div>
       </div>
-
       <DetailMenu />
     </div>
   );

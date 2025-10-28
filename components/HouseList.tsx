@@ -61,7 +61,11 @@ export default ({
         }}
         prefix={
           <Image
-            src={`${BASE_URL}${item.houseImg}`}
+            src={
+              item.houseImg.startsWith("http")
+                ? item.houseImg
+                : `${BASE_URL}${item.houseImg}`
+            }
             fit="cover"
             alt=""
             width={106}

@@ -9,14 +9,16 @@ import { handleSearch } from "@/lib/utils";
 import { useAppSelector, useAppDispatch } from "@/lib/hooks";
 import { setFrom } from "@/lib/stores/slices/fromSlice";
 export default ({
+  locat,
   from = "/",
   absolute = true,
   cpnts: { back = true, map = true, select = true, share = true, title } = {
     back: false,
     share: false,
     title: false,
-  }, // 聪明
+  },
 }: {
+  locat?: (value: string) => void;
   from?: string;
   absolute?: boolean;
   cpnts?: {
@@ -43,8 +45,9 @@ export default ({
   const onChange = (value: string) => {
     setLocation(value);
   };
-  const onSelect = () => {
-    router.push(`/amap`);
+  const onSelect = (value: string) => {
+    console.log(value, "value111");
+    locat?.(value);
   };
 
   //

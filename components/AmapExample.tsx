@@ -9,6 +9,7 @@ interface AmapExampleProps {
   onMapClick?: (lng: number, lat: number) => void;
   markers?: Array<AreaItem>;
   onDrillDown: (id: string, detail?: boolean) => void;
+  locat?: string;
 }
 const baseTextStyle = {
   width: "70px",
@@ -20,14 +21,14 @@ export default memo(function AmapExample({
   center = { lng: 116.397428, lat: 39.90923 },
   zoom = 11,
   height = "400px",
-  onMapClick,
   markers = [],
   onDrillDown,
+  locat,
 }: AmapExampleProps) {
   const [mapLoaded, setMapLoaded] = useState(false);
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
-  const level = useRef<0 | 1 | 2 | 3>(1);
+  const level = useRef<number>(1);
 
   useEffect(() => {
     if (mapLoaded && window.AMap && mapRef.current) {
@@ -69,7 +70,7 @@ export default memo(function AmapExample({
 
   useEffect(() => {
     if (mapLoaded && window.AMap && mapInstanceRef.current) {
-      // 先清空地图上的所有标记
+      // 先清空地图上的所有标记和事件监听器
       mapInstanceRef.current.clearMap();
 
       // 添加标记点
@@ -89,9 +90,10 @@ export default memo(function AmapExample({
         }
 
         const text = new window.AMap.Text({
-          text: level.current
-            ? `${marker.label}\n${marker.count}套`
-            : `${marker.label}${marker.count}套`,
+          text:
+            level.current % 5 || !locat
+              ? `${marker.label}\n${marker.count}套`
+              : `${marker.label}${marker.count}套`,
           anchor: "center", // 设置文本标记锚点
           cursor: "pointer",
           angle: 0,
@@ -106,30 +108,24 @@ export default memo(function AmapExample({
             border: "2px solid rgba(255, 255, 255, 0.8)",
             textAlign: "center",
             cursor: "pointer",
-            ...(level.current ? baseTextStyle : {}),
+            ...(level.current % 5 || !locat ? baseTextStyle : {}),
           },
-          offset: level.current
-            ? new window.AMap.Pixel(-35, -35)
-            : new window.AMap.Pixel(-50, -15),
+          offset:
+            level.current % 5 || !locat
+              ? new window.AMap.Pixel(-35, -35)
+              : new window.AMap.Pixel(-50, -15),
           position: new window.AMap.LngLat(lng, lat),
         });
 
         // 绑定点击事件
         const textClickHandler = (e: any) => {
-          // 阻止事件冒泡
-          if (e && e.stopPropagation) {
-            e.stopPropagation();
-          }
-          if (e && e.preventDefault) {
-            e.preventDefault();
-          }
-
+          console.log(level.current, "level.current");
           if (!level.current) {
             onDrillDown?.(marker.value, true);
             return;
           }
           onDrillDown?.(marker.value);
-          level.current = ((level.current + 1) % 3) as 0 | 1 | 2 | 3;
+          level.current = (level.current + 1) % 5;
         };
 
         text.on("click", textClickHandler);

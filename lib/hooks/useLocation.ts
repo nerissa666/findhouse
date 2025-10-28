@@ -36,6 +36,7 @@ export interface UseLocationReturn {
  * @param options 定位选项
  * @returns 定位相关的状态和方法
  */
+
 export const useLocation = (
   options: UseLocationOptions = {}
 ): UseLocationReturn => {
@@ -73,6 +74,7 @@ export const useLocation = (
 
   // 获取定位
   const getLocation = useCallback(async () => {
+    console.log(222);
     if (!supported) {
       setError({
         code: -1,
@@ -83,7 +85,6 @@ export const useLocation = (
 
     setLoading(true);
     setError(null);
-
     try {
       const locationData = withAddress
         ? await getCurrentLocationWithAddress({
@@ -96,7 +97,6 @@ export const useLocation = (
             timeout,
             maximumAge,
           });
-
       setLocation(locationData);
     } catch (err: any) {
       setError(err);
