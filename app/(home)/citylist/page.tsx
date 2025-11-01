@@ -3,14 +3,15 @@ import { Input, List } from "antd";
 import styles from "./index.module.scss";
 import axios from "@/lib/axios";
 import { CityItem } from "@/app/types";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { SelectOption, CityListGrouped } from "@/app/types";
 import { handleClick, handleSearch } from "@/lib/utils";
 import { useAppSelector, useAppDispatch } from "@/lib/hooks";
 import { setCurrentCity } from "@/lib/stores/slices/citySlice";
 import SearchBar from "@/components/SearchBar";
-export default () => {
+
+function CityListContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const dispatch = useAppDispatch();
@@ -305,4 +306,12 @@ export default () => {
       </div>
     </div>
   );
-};
+}
+
+export default function CityListPage() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center h-screen">加载中...</div>}>
+      <CityListContent />
+    </Suspense>
+  );
+}
