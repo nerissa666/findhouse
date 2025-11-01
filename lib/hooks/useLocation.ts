@@ -74,7 +74,6 @@ export const useLocation = (
 
   // 获取定位
   const getLocation = useCallback(async () => {
-    console.log(222);
     if (!supported) {
       setError({
         code: -1,

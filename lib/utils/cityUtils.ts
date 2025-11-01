@@ -8,7 +8,6 @@ import { SelectOption, Coord } from "@/app/types";
 export const getCityMapCenter = (
   city: SelectOption
 ): { lng: number; lat: number } => {
-  console.log("city", city);
   if (city.coord) {
     return {
       lng: parseFloat(city.coord.longitude),
