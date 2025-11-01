@@ -11,7 +11,6 @@ export default ({ withAddress = true }: { withAddress?: boolean }) => {
   useEffect(() => {
     async function fetchLocation() {
       const location = await getLocation();
-      console.log(location, "location111");
       //   dispatch(setCurrentCity({
       //     label: location?.label,
       //     value: location?.value,

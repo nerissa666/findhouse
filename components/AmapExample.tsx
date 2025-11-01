@@ -47,12 +47,9 @@ export default memo(function AmapExample({
 
       // 使用高德地图的 complete 事件回调
       map.on("complete", () => {
-        console.log("地图渲染完成，优化 Canvas 性能");
         const canvases = mapRef.current?.querySelectorAll("canvas");
-        console.log("找到的 canvases:", canvases);
         canvases!.forEach((canvas) => {
           (canvas as HTMLCanvasElement).willReadFrequently = true;
-          console.log("设置 Canvas willReadFrequently = true");
         });
       });
     }
@@ -77,7 +74,6 @@ export default memo(function AmapExample({
       markers.forEach((marker, index) => {
         // 验证坐标数据
         if (!marker.coord?.longitude || !marker.coord?.latitude) {
-          console.warn("Invalid marker coordinates:", marker);
           return;
         }
         const lng = Number(marker.coord.longitude);
@@ -85,7 +81,6 @@ export default memo(function AmapExample({
 
         // 检查是否为有效数字
         if (isNaN(lng) || isNaN(lat)) {
-          console.warn("Invalid marker coordinates (NaN):", marker);
           return;
         }
 
@@ -119,7 +114,6 @@ export default memo(function AmapExample({
 
         // 绑定点击事件
         const textClickHandler = (e: any) => {
-          console.log(level.current, "level.current");
           if (!level.current) {
             onDrillDown?.(marker.value, true);
             return;
