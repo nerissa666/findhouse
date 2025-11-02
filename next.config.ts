@@ -2,7 +2,8 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   // 配置子路径，所有内部链接和静态资源都会自动加上 /findhouse 前缀
-  basePath: process.env.NEXT_PUBLIC_BASE_PATH,
+  // 这样所有路由、静态资源和图片路径都会自动加上 /findhouse 前缀
+  basePath: "/findhouse",
 
   images: {
     remotePatterns: [

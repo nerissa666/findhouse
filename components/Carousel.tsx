@@ -5,7 +5,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import axios from "@/lib/axios";
 import styles from "./index.module.scss";
-
+import { BASE_URL } from "@/lib/consts";
 const fetchData = async (): Promise<itemType[]> =>
   await axios.get("/home/swiper");
 interface itemType {
@@ -71,7 +71,7 @@ const Carousel = () => {
         {data.map((item) => (
           <div key={item.id}>
             <h3>
-              <Image alt={item.alt} src={item.imgSrc} width="100%" />
+              <Image alt={item.alt} src={BASE_URL + item.imgSrc} width="100%" />
             </h3>
           </div>
         ))}

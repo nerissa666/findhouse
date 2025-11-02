@@ -12,7 +12,8 @@ export const TAG_COLORS = [
 ];
 
 // 获取 basePath，用于构建正确的图片路径
-const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH;
+// 与 next.config.ts 中的 basePath 保持一致
+const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || "/findhouse";
 
 // 如果 NEXT_PUBLIC_PROXY 为空，使用 basePath，这样图片会通过 /findhouse/img/ 路径访问
 // 这样可以通过 Next.js 的 rewrites 转发到后端服务

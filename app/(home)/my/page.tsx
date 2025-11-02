@@ -1,6 +1,5 @@
 "use client";
 import dynamic from "next/dynamic";
-
 // 优化的 Dynamic Import
 const Menu = dynamic(() => import("../menu").then((mod) => mod.Menu), {
   loading: () => (
@@ -12,7 +11,8 @@ const Menu = dynamic(() => import("../menu").then((mod) => mod.Menu), {
 });
 import { useRef, useState, useEffect } from "react";
 import { ListItem } from "@/app/types";
-import Image from "next/image";
+import { Image } from "antd";
+
 import { Button } from "antd-mobile";
 import { useAppSelector } from "@/lib/hooks";
 import { BASE_URL } from "@/lib/consts";

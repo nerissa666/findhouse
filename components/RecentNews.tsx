@@ -1,6 +1,7 @@
 import { List, Image } from "antd";
 import { useEffect, useState } from "react";
 import axios from "@/lib/axios";
+import { BASE_URL } from "@/lib/consts";
 interface itemType {
   id: number;
   title: string;
@@ -93,7 +94,7 @@ const RecentNews = ({ title = true }: { title?: boolean }) => {
                   width={200}
                   preview={false}
                   alt="img"
-                  src={item.imgSrc}
+                  src={BASE_URL + item.imgSrc}
                 />
               }
             />
