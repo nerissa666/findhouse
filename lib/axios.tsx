@@ -1,13 +1,14 @@
 // findhouse/axios.tsx
 const controller = new AbortController();
 import axios from "axios";
+import { BASE_URL } from "./consts";
 // 扩展 AxiosResponse 类型（暂时注释掉，未使用）
 // interface CustomAxiosResponse<T = unknown> extends AxiosResponse<T> {
 //   body?: T;
 // }
 const axiosInstance = axios.create({
   //   baseURL: process.env.REACT_APP_URL, // 你的 API 基础 URL
-  baseURL: "http://localhost:8080", // 你的 API 基础 URL
+  baseURL: BASE_URL, // 你的 API 基础 URL
   timeout: 10000, // 请求超时时间（毫秒）
 });
 
