@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { Button, Swiper, Tag, Toast } from "antd-mobile";
 import SafeSwiper from "@/components/SafeSwiper";
 import { useSearchParams } from "next/navigation";
@@ -22,7 +22,7 @@ const SearchBar = dynamic(() => import("@/components/SearchBar"), {
 import Image from "next/image";
 import styles from "./index.module.scss";
 
-export default () => {
+function DetailContent() {
   const searchParams = useSearchParams();
   const code = searchParams.get("code") ?? "";
   const [data, setData] = useState<HouseInfo>();
@@ -278,4 +278,18 @@ export default () => {
       <DetailMenu />
     </div>
   );
-};
+}
+
+export default function DetailPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center h-screen">
+          加载中...
+        </div>
+      }
+    >
+      <DetailContent />
+    </Suspense>
+  );
+}

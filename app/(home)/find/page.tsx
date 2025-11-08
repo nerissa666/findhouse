@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, { useEffect, useState, useCallback, useRef, Suspense } from "react";
 import axios from "@/lib/axios";
 import { HousesBody, House } from "@/app/types";
 import dynamic from "next/dynamic";
@@ -15,7 +15,7 @@ import { useAppSelector } from "@/lib/hooks";
 import { useSearchParams } from "next/navigation";
 const PAGE_SIZE = 20;
 
-export default () => {
+function FindContent() {
   const searchParams = useSearchParams();
   const rentType = searchParams.get("rentType") || null;
   const city = useAppSelector((state) => state.city.currentCity);
@@ -80,4 +80,12 @@ export default () => {
       />
     </>
   );
-};
+}
+
+export default function FindPage() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center h-screen">加载中...</div>}>
+      <FindContent />
+    </Suspense>
+  );
+}

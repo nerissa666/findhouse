@@ -2,7 +2,7 @@ import { List, Avatar } from "antd";
 import React, { useEffect, useState } from "react";
 import axios from "@/lib/axios";
 import { useAppSelector } from "@/lib/hooks";
-
+import { BASE_URL } from "@/lib/consts";
 interface itemType {
   id: number;
   title: string;
@@ -63,7 +63,12 @@ const GroupRents = () => {
               className="flex-row-reverse"
               title={<a href="#">{item.title}</a>}
               description={item.desc}
-              avatar={<Avatar className="w-[50%] h-[100%]" src={item.imgSrc} />}
+              avatar={
+                <Avatar
+                  className="w-[50%] h-[100%]"
+                  src={BASE_URL + item.imgSrc}
+                />
+              }
             />
           </List.Item>
         )}
