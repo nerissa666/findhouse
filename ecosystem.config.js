@@ -1,0 +1,32 @@
+module.exports = {
+    apps: [
+        {
+            name: 'findhouse',
+            script: 'node_modules/next/dist/bin/next',
+            args: 'start -H 0.0.0.0',
+            cwd: process.cwd(),
+            instances: 1,
+            exec_mode: 'fork',
+            env: {
+                NODE_ENV: 'production',
+                PORT: 3000,
+                HOSTNAME: '0.0.0.0',
+            },
+            // 日志配置
+            error_file: './logs/pm2-error.log',
+            out_file: './logs/pm2-out.log',
+            log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
+            merge_logs: true,
+
+            // 自动重启配置
+            autorestart: true,
+            watch: false,
+            max_memory_restart: '1G',
+
+            // 其他配置
+            min_uptime: '10s',
+            max_restarts: 10,
+        },
+    ],
+};
+
