@@ -248,3 +248,9 @@ sudo netstat -tlnp | grep 3306
 
 
 
+
+
+
+
+
+
